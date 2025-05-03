@@ -1,7 +1,9 @@
 import express from "express"
 import { addSalarie, deleteSalarie, detailSalarie, listSalarie, updateSalarie } from "../controllers/salarie.js"
+import { authenticate } from "../middlewares/auth.js"
 
 export const router = express.Router()
+router.use(authenticate)
 
 router.get('/', listSalarie)
 router.get('/:id', detailSalarie)
