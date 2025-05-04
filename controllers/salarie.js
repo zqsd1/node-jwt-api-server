@@ -50,3 +50,14 @@ export const deleteSalarie = (req, res) => {
         res.status(500).json(err.message)
     )
 }
+
+//return salarie id if nom prenom  exists
+export const findByName = (req, res) => {
+    const { nom, prenom } = req.body
+    Salarie.findOne({ nom, prenom }).then(result => {
+        if (!result) return res.status(404).json("vous n'existez pas")
+        return res.json({ id: result._id })
+    }).catch(err =>
+        res.status(500).json(err.message)
+    )
+}
