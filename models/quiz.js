@@ -12,14 +12,14 @@ const QuizSchema = new Schema({
     nom: {
         type: String,
         lowercase: true,
-        required: true,
+        // required: true,
         match: /^[a-zA-Z\é\ç\è\-]+$/,
         immutable:true
     },
     prenom: {
         type: String,
         lowercase: true,
-        required: true,
+        // required: true,
         match: /^[a-zA-Zéçè-]+$/,
         immutable:true
 
