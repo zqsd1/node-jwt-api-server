@@ -29,8 +29,10 @@ export const addQuiz = (req, res) => {
 
 }
 
+
 export const updateQuiz = (req, res) => {
-    const { assignedTo, id } = req.body
+    const { id } = req.params
+    const { assignedTo } = req.body
     Quiz.findById(id).then(result => {
         return result.updateOne({ assignedTo })
     }).then(result => {

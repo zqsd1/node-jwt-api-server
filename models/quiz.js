@@ -53,9 +53,27 @@ QuizSchema.pre('deleteOne', async function (next) {
     console.log("quiz delete")
     const quiz = await Quiz.findById(this._conditions._id)
     const salarie = await Salarie.findById(quiz.assignedTo)
-    salarie.quizs = salarie.quizs.filter(q => q.equals(quiz._id))
+    salarie.quizs = salarie.quizs.filter(q => !q.equals(quiz._id))
     await salarie.save()
     next()
+})
+
+
+//remove le quiz du salarie
+QuizSchema.pre('updateOne', async function (next) {
+    const quiz = await Quiz.findById(this._conditions._id)
+    const salarie = await Salarie.findById(quiz.assignedTo)
+    if (salarie.quizs)
+        salarie.quizs = salarie.quizs.filter(q => !q.equals(quiz._id))
+    await salarie.save()
+    next()
+})
+//assign le quiz au nouveau salarie
+QuizSchema.post('updateOne', async function (doc) {
+    const salarie = await Salarie.findById(this._update.$set.assignedTo)
+    salarie.quizs.push(this._conditions._id)
+    await salarie.save()
+
 })
 
 export const Quiz = mongoose.model('Quiz', QuizSchema)
