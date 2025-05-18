@@ -28,17 +28,17 @@ export const addSalarie = (req, res) => {
     )
 }
 
+//peut changer nom prenom
 export const updateSalarie = (req, res) => {
     const id = req.params.id
-    const { quizs } = req.body
+    const { nom, prenom } = req.body
     Salarie.findById(id).then(result => {
-        return result.updateOne({ quizs: quizs })
+        return result.updateOne({ nom, prenom })
     }).then(result => {
         res.json(result)
     }).catch(err =>
         res.status(500).json(err.message)
     )
-
 }
 
 export const deleteSalarie = (req, res) => {
