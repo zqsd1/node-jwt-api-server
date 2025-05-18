@@ -1,8 +1,11 @@
 import express from "express"
-import { addSalarie, deleteSalarie, detailSalarie, listSalarie, updateSalarie } from "../controllers/salarie.js"
+import { addSalarie, deleteSalarie, detailSalarie, findByName, listSalarie, updateSalarie } from "../controllers/salarie.js"
 import { authenticate } from "../middlewares/auth.js"
 
 export const router = express.Router()
+
+router.post('/byname',findByName)
+
 router.use(authenticate)
 
 router.get('/', listSalarie)
