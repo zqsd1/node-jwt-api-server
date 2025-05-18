@@ -19,8 +19,8 @@ export const getQuiz = (req, res) => {
 }
 
 export const addQuiz = (req, res) => {
-    const { note, nom, prenom, quizName } = req.body
-    const newQuiz = new Quiz({ note, nom, prenom, quizName })
+    const { note, nom, prenom, quizName, assignedTo } = req.body
+    const newQuiz = new Quiz({ note, nom, prenom, quizName, assignedTo })
     newQuiz.save().then(result => {
         res.json(result)
     }).catch(err => {
