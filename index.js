@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import { Salarie } from "./models/salarie.js";
 import { Quiz } from "./models/quiz.js";
 
-mongoose.connect('mongodb://127.0.0.1:27017/quizs')
+mongoose.connect(process.env.DATABASE_URL)
     .then(() => {
         console.log("connected")
     }).catch(err => console.error(err))
