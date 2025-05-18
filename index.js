@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { router as quizRouter } from "./routes/quiz.js"
 import { router as salarieRouter } from "./routes/salarie.js";
 import mongoose from "mongoose";
+import cors from "cors"
 
 mongoose.connect(process.env.DATABASE_URL)
     .then(() => {
@@ -10,6 +11,9 @@ mongoose.connect(process.env.DATABASE_URL)
     }).catch(err => console.error(err))
 
 const app = express()
+app.use(cors({
+    credentials: true
+}))
 app.use(express.json())
 
 app.use('/api/quiz', quizRouter)
