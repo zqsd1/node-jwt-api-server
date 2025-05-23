@@ -28,10 +28,11 @@ SalarieSchema.index({ nom: 1, prenom: 1 }, { unique: true })
 SalarieSchema.pre('deleteOne', async function (next) {
 
     console.log("salarie delete")
-    const salarie = await Salarie.findById(this._conditions._id)
-    if (salarie.quizs)
-        await Quiz.deleteMany({ _id: { $in: salarie.quizs } })
+    await Quiz.deleteMany({ assignedTo: this._conditions._id })
     next()
+})
+
+SalarieSchema.post('deleteOne', function (doc) {
 })
 
 export const Salarie = mongoose.model('Salarie', SalarieSchema)
