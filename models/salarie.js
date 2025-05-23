@@ -22,9 +22,7 @@ const SalarieSchema = new mongoose.Schema({
     },
     quizs: { type: [mongoose.Schema.ObjectId], ref: "Quiz" }
 })
-
-SalarieSchema.post('deleteOne', function (doc) {
-})
+SalarieSchema.index({ nom: 1, prenom: 1 }, { unique: true })
 
 //quand on delete un salarie faut delete les quiz associé
 SalarieSchema.pre('deleteOne', async function (next) {
