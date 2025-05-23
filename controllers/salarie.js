@@ -11,7 +11,7 @@ export const listSalarie = (req, res) => {
 
 export const detailSalarie = (req, res) => {
     const id = req.params.id
-    Salarie.findById(id).populate().then(result => {
+    Salarie.findById(id).populate('quizs').then(result => {
         res.json(result)
     }).catch(err =>
         res.status(500).json(err.message)
