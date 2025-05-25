@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import { Salarie } from "./salarie.js";
 
+const QuestionSchema = new Schema({
+    question: { type: String },
+    answers: { type: [String] },
+    userAnswers: { type: [String] },
+    goodAnswers: { type: [String] }
+})
+
 const QuizSchema = new Schema({
     note: {
         type: Number,
@@ -10,27 +17,13 @@ const QuizSchema = new Schema({
         immutable: true
 
     },
-    // nom: {
-    //     type: String,
-    //     lowercase: true,
-    //     // required: true,
-    //     match: /^[a-zA-Z\é\ç\è\-]+$/,
-    //     immutable: true
-    // },
-    // prenom: {
-    //     type: String,
-    //     lowercase: true,
-    //     // required: true,
-    //     match: /^[a-zA-Zéçè-]+$/,
-    //     immutable: true
-
-    // },
     quizName: {
         type: String,
         required: true,
         immutable: true
 
     },
+    questions: { type: [QuestionSchema] },
     doneAt: {
         type: Date,
         default: () => Date.now(),
@@ -59,6 +52,9 @@ QuizSchema.pre('deleteOne', async function (next) {
 })
 
 
+//     userSchema.pre('findOneAndUpdate', function() {
+//   console.log(this.getFilter()); // { name: 'John' }
+//   console.log(this.getUpdate()); // { age: 30 }
 //remove le quiz du salarie
 QuizSchema.pre('updateOne', async function (next) {
     const quiz = await Quiz.findById(this._conditions._id)
