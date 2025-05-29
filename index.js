@@ -1,7 +1,7 @@
 import express from "express"
 import 'dotenv/config'
-import { router as quizRouter } from "./routes/quiz.js"
-import { router as salarieRouter } from "./routes/salarie.js";
+import { router as quizRouter } from "./src/routes/quiz.js"
+import { router as salarieRouter } from "./src/routes/salarie.js";
 import mongoose from "mongoose";
 import cors from "cors"
 
