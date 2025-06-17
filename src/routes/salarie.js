@@ -4,12 +4,15 @@ import { authenticate } from "../middlewares/auth.js"
 
 export const router = express.Router()
 
-router.post('/byname',findByName)
+router.post('/byname', findByName)
 
 router.use(authenticate)
 
 router.get('/', listSalarie)
 router.get('/:id', detailSalarie)
+// router.get('/:salarie_id/quizs')
+// router.get('/:id/evaluations')
 router.post('/', addSalarie)
 router.put('/:id', updateSalarie)
 router.delete('/:id', deleteSalarie)
+
