@@ -6,9 +6,10 @@ import { router as quizRouter } from "./src/routes/quiz.js"
 import { router as salarieRouter } from "./src/routes/salarie.js";
 import { router as evaluationRouter } from "./src/routes/evaluation.js";
 
-import { logger } from "winston.js";
-
-if (process.env.NODE_ENV != "production") await import('dotenv/config')
+import { logger } from "./src/winston.js";
+import "dotenv/config"
+// if (process.env.NODE_ENV != "production") await import('dotenv/config')
+import "./src/db/mongo.js"
 
 const app = express()
 app.use(cors({
