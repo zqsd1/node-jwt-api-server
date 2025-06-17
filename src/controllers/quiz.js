@@ -19,7 +19,21 @@ export const getQuiz = (req, res) => {
 }
 
 export const addQuiz = (req, res) => {
-    const { note, quizName, assignedTo, questions } = req.body
+    const { quizName, assignedTo, questions } = req.body
+    const note = questions?.reduce((previous, current) => {
+        const goodAnswer = current.goodAnswer
+        const userAnswer = current.userAnswer
+        if (Array.isArray(goodAnswer)) {
+            const good = goodAnswer.sort().every((asw, i) => asw === [...userAnswer].sort()[i])
+            if (good) return previous + 1
+        } else {
+            if (userAnswer.length === 1 && userAnswer[0] == goodAnswer) {
+                return previous + 1
+            }
+        }
+        return previous
+    }, 0)
+    
     const newQuiz = new Quiz({ note, quizName, assignedTo, questions })
     newQuiz.save().then(result => {
         res.json(result)
