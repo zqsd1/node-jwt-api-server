@@ -11,34 +11,39 @@ export const listSalarie = (req, res) => {
 
 export const detailSalarie = (req, res) => {
     const id = req.params.id
-    Salarie.findById(id).populate('quizs').then(result => {
-        res.json(result)
-    }).catch(err =>
-        res.status(500).json(err.message)
-    )
+    Salarie.findById(id)
+        .populate('quizs')
+        .populate('evaluations')
+        .then(result => {
+            res.json(result)
+        }).catch(err =>
+            res.status(500).json(err.message)
+        )
 }
 
 export const addSalarie = (req, res) => {
     const { nom, prenom, genre } = req.body
     const newSalarie = new Salarie({ nom, prenom, genre })
-    newSalarie.save().then(result => {
-        res.json(result)
-    }).catch(err =>
-        res.status(500).json(err.message)
-    )
+    newSalarie.save()
+        .then(result => {
+            res.json(result)
+        }).catch(err =>
+            res.status(500).json(err.message)
+        )
 }
 
 //peut changer nom prenom
 export const updateSalarie = (req, res) => {
     const id = req.params.id
     const { nom, prenom } = req.body
-    Salarie.findById(id).then(result => {
-        return result.updateOne({ nom, prenom })
-    }).then(result => {
-        res.json(result)
-    }).catch(err =>
-        res.status(500).json(err.message)
-    )
+    Salarie.findById(id)
+        .then(result => {
+            return result.updateOne({ nom, prenom })
+        }).then(result => {
+            res.json(result)
+        }).catch(err =>
+            res.status(500).json(err.message)
+        )
 }
 
 export const deleteSalarie = (req, res) => {

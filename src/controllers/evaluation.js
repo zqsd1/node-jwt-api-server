@@ -1,4 +1,3 @@
-import { response } from "express"
 import { Evaluation } from "../models/evaluation.js"
 
 export const listEvaluation = (req, res) => {
@@ -14,6 +13,7 @@ export const listEvaluation = (req, res) => {
 export const getEvaluation = (req, res) => {
     const { id } = req.params
     Evaluation.findById(id)
+    .populate('assignedTo')
         .then(result => {
             res.json(result)
         }).catch(err => {
