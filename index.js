@@ -5,6 +5,7 @@ import cors from "cors"
 import { router as quizRouter } from "./src/routes/quiz.js"
 import { router as salarieRouter } from "./src/routes/salarie.js";
 import { router as evaluationRouter } from "./src/routes/evaluation.js";
+import { router as templateRouter } from "./src/routes/templates.js";
 
 import { logger } from "./src/winston.js";
 import "dotenv/config"
@@ -21,6 +22,7 @@ app.use(express.json())
 app.use('/api/quizs', quizRouter)
 app.use('/api/salaries', salarieRouter)
 app.use('/api/evaluations', evaluationRouter)
+app.use('/api/templates',templateRouter)
 
 const port = process.env.SERVER_PORT
 app.listen(port, () => {
