@@ -1,26 +1,33 @@
 import { Quiz } from "../models/quiz.js"
 
-export const listQuiz = (req, res) => {
+export const listQuiz = (req, res, next) => {
 
-    Quiz.find().then(result => {
-        res.json(result)
+    Quiz.find().then(data => {
+        res.json({
+            success: true,
+            message: `list quizs`,
+            data
+        })
     }).catch(err => {
-        res.status(500).json(err.message)
+        next(err)
     })
 }
 
-export const getQuiz = (req, res) => {
+export const getQuiz = (req, res, next) => {
     const id = req.params.id
-    Quiz.findById(id).then(result => {
-        res.json(result)
+    Quiz.findById(id).then(data => {
+        res.json({
+            success: true,
+            message: `quiz ${id}`,
+            data
+        })
     }).catch(err => {
-        res.status(500).json(err.message)
+        next(err)
     })
 }
 
-export const addQuiz = (req, res) => {
-    const { quizName, assignedTo, questions } = req.body
-    const note = questions?.reduce((previous, current) => {
+const calculScore = (quiz) => {
+    return quiz?.reduce((previous, current) => {
         const goodAnswer = current.goodAnswer
         const userAnswer = current.userAnswer
         if (Array.isArray(goodAnswer)) {
@@ -33,35 +40,49 @@ export const addQuiz = (req, res) => {
         }
         return previous
     }, 0)
-    
+}
+
+export const addQuiz = (req, res, next) => {
+    const { quizName, assignedTo, questions } = req.body
+    const note = calculScore(questions)
+
     const newQuiz = new Quiz({ note, quizName, assignedTo, questions })
-    newQuiz.save().then(result => {
-        res.json(result)
-    }).catch(err => {
-        res.status(500).json(err.message)
-    })
+    newQuiz.save()
+        .then(data => {
+            res.json({
+                success: true,
+                message: `ajout quiz`,
+                data
+            })
+        }).catch(err => {
+            next(err)
+        })
 
 }
 
 
-export const updateQuiz = (req, res) => {
-    const { id } = req.params
-    const { assignedTo } = req.body
-    Quiz.findById(id).then(result => {
-        return result.updateOne({ assignedTo })
-    }).then(result => {
-        res.json(result)
-    }).catch(err => {
-        res.status(500).json(err.message)
-    })
-}
+// export const updateQuiz = (req, res,next) => {
+//     const { id } = req.params
+//     const { assignedTo } = req.body
+//     Quiz.findById(id).then(result => {
+//         return result.updateOne({ assignedTo })
+//     }).then(result => {
+//         res.json(result)
+//     }).catch(err => {
+//         res.status(500).json(err.message)
+//     })
+// }
 
-export const deleteQuiz = (req, res) => {
+export const deleteQuiz = (req, res, next) => {
     const id = req.params.id
-    Quiz.deleteOne({ _id: id }).then(result => {
-        res.json(result)
+    Quiz.deleteOne({ _id: id }).then(data => {
+        res.json({
+            success: true,
+            message: `quiz ${id} deleted`,
+            data
+        })
     }).catch(err => {
-        res.status(500).json(err.message)
+        next(err)
     })
 
 }

@@ -1,49 +1,70 @@
 import { Evaluation } from "../models/evaluation.js"
 
-export const listEvaluation = (req, res) => {
+export const listEvaluation = (req, res, next) => {
     Evaluation.find()
-        .then(result => {
-            res.json(result)
+        .then(data => {
+            res.json({
+                success: true,
+                message: "list evaluation",
+                data
+            })
         }).catch(err => {
-            console.log(err)
-            res.status(500).json(err.message)
+            next(err)
+            // console.log(err)
+            // res.status(500).json(err.message)
         })
 }
 
-export const getEvaluation = (req, res) => {
+export const getEvaluation = (req, res, next) => {
     const { id } = req.params
     Evaluation.findById(id)
-    .populate('assignedTo')
-        .then(result => {
-            res.json(result)
+        .populate('assignedTo')
+        .then(data => {
+            res.json({
+                success: true,
+                message: `evaluation ${id}`,
+                data
+            })
         }).catch(err => {
-            console.log(err)
-            res.status(500).json(err.message)
+            next(err)
+            // console.log(err)
+            // res.status(500).json(err.message)
         })
 }
 
-export const deleteEvaluation = (req, res) => {
+export const deleteEvaluation = (req, res, next) => {
     const { id } = req.params
     Evaluation.deleteOne({ _id: id })
-        .then(result => {
-            res.json(result)
+        .then(data => {
+            res.json({
+                success: true,
+                message: `evaluation ${id} deleted`,
+                data
+            })
         }).catch(err => {
-            console.log(err)
-            res.status(500).json(err.message)
+            next(err)
+            // console.log(err)
+            // res.status(500).json(err.message)
         })
 }
 
-export const addEvaluation = (req, res) => {
+export const addEvaluation = (req, res, next) => {
     const evaluation = new Evaluation(req.body.evaluation)
-    evaluation.save().then(result => {
-        res.json(result)
-    }).catch(err => {
-        console.log(err)
-        res.status(500).json(err.message)
-    })
+    evaluation.save()
+        .then(data => {
+            res.json({
+                success: true,
+                message: "evaluation ajouté",
+                data
+            })
+        }).catch(err => {
+            next(err)
+            // console.log(err)
+            // res.status(500).json(err.message)
+        })
 }
 
-export const addCounterEvaluation = (req, res) => {
+export const addCounterEvaluation = (req, res,next) => {
     const { id } = req.params
     const { competence } = req.body
     Evaluation.findById(id)
@@ -51,10 +72,15 @@ export const addCounterEvaluation = (req, res) => {
             const to_update = result.competences.find(comp => comp._id = competence._id)
             to_update.push(competence)
             return result.save()
-        }).then(result => {
-            res.json(result)
+        }).then(data => {
+            res.json({
+                success: true,
+                message: "counter evaluation ajouté",
+                data
+            })
         }).catch(err => {
-            console.log(err)
-            res.status(500).json(err.message)
+            next(err)
+            // console.log(err)
+            // res.status(500).json(err.message)
         })
 }

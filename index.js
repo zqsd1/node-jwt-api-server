@@ -11,6 +11,7 @@ import { logger } from "./src/winston.js";
 import "dotenv/config"
 // if (process.env.NODE_ENV != "production") await import('dotenv/config')
 import "./src/db/mongo.js"
+import { errors } from "./src/middlewares/errors.js";
 
 const app = express()
 app.use(cors({
@@ -23,6 +24,8 @@ app.use('/api/quizs', quizRouter)
 app.use('/api/salaries', salarieRouter)
 app.use('/api/evaluations', evaluationRouter)
 app.use('/api/templates',templateRouter)
+
+app.use(errors)
 
 const port = process.env.SERVER_PORT
 app.listen(port, () => {
