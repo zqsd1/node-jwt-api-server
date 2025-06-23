@@ -10,8 +10,6 @@ export const listEvaluation = (req, res, next) => {
             })
         }).catch(err => {
             next(err)
-            // console.log(err)
-            // res.status(500).json(err.message)
         })
 }
 
@@ -27,8 +25,6 @@ export const getEvaluation = (req, res, next) => {
             })
         }).catch(err => {
             next(err)
-            // console.log(err)
-            // res.status(500).json(err.message)
         })
 }
 
@@ -43,13 +39,12 @@ export const deleteEvaluation = (req, res, next) => {
             })
         }).catch(err => {
             next(err)
-            // console.log(err)
-            // res.status(500).json(err.message)
         })
 }
 
 export const addEvaluation = (req, res, next) => {
-    const evaluation = new Evaluation(req.body.evaluation)
+    const { assignedTo, competences, evaluationName } = req.body
+    const evaluation = new Evaluation({ assignedTo, evaluationName, competences })
     evaluation.save()
         .then(data => {
             res.json({
@@ -59,18 +54,20 @@ export const addEvaluation = (req, res, next) => {
             })
         }).catch(err => {
             next(err)
-            // console.log(err)
-            // res.status(500).json(err.message)
         })
 }
 
-export const addCounterEvaluation = (req, res,next) => {
+export const addCounterEvaluation = (req, res, next) => {
     const { id } = req.params
-    const { competence } = req.body
+    const { competences } = req.body
     Evaluation.findById(id)
         .then(result => {
-            const to_update = result.competences.find(comp => comp._id = competence._id)
-            to_update.push(competence)
+            result.competences.forEach(competence => {
+                const comp = competences.find(c => competence._id.equals(c._id))
+                if (comp) {
+                    competence.counterEval.push({ ...comp.counterEval })
+                }
+            })
             return result.save()
         }).then(data => {
             res.json({
@@ -80,7 +77,5 @@ export const addCounterEvaluation = (req, res,next) => {
             })
         }).catch(err => {
             next(err)
-            // console.log(err)
-            // res.status(500).json(err.message)
         })
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addEvaluation, deleteEvaluation, getEvaluation, listEvaluation } from "../controllers/evaluation.js";
+import { addCounterEvaluation, addEvaluation, deleteEvaluation, getEvaluation, listEvaluation } from "../controllers/evaluation.js";
 
 export const router = new Router()
 
@@ -9,6 +9,6 @@ router.get('/:id', getEvaluation)
 
 router.post('/', addEvaluation)
 
-router.put('/:id', () => { })
+router.put('/:id', addCounterEvaluation)
 
 router.delete('/:id', deleteEvaluation)

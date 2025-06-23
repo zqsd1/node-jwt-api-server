@@ -3,8 +3,8 @@ import { Salarie } from "./salarie.js";
 
 const NiveauCompetence = new Schema({
     mastery: String,
-    evaluateBy: String,
-    evaluateAt: { type: Date, default: () => Date.now() },
+    evaluatedBy: String,
+    evaluatedAt: { type: Date, default: () => Date.now() },
 })
 
 const CompetenceSchema = new Schema({
@@ -14,7 +14,7 @@ const CompetenceSchema = new Schema({
 })
 
 const EvaluationSchema = new Schema({
-    EvaluationName: String,
+    evaluationName: String,
     competences: [CompetenceSchema],
     assignedTo: { type: Schema.Types.ObjectId, ref: "Salarie" },
     doneAt: { type: Date, default: () => Date.now() },
