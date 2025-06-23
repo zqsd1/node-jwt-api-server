@@ -1,6 +1,8 @@
 import path from 'node:path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
+import { logger } from '../winston.js';
+import { HttpError } from '../httpError.js';
 
 // Needed to construct __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -38,24 +40,25 @@ export const listTemplates = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err)
+        logger.error(err)
         res.status(500).json({ success: false, message: "Error reading templates", errors: err });
 
     }
 }
 
-export const getTemplate = (req, res) => {
+export const getTemplate = (req, res, next) => {
     const fileName = req.params.name;
     const filePath = path.join(DATA_DIR, `${fileName}.json`);
+    import(filePath, { with: { type: "json" } })
+        .then(file => {
+            res.json({
+                success: true,
+                message: `quiz ${fileName}`,
+                data: file.default
+            })
+        }).catch((err) => {
+            logger.error(err)
+            next(new HttpError(404, `Template "${fileName}" not found.`))
+        })
 
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.status(404).json({
-                success: false,
-                message: `Template "${fileName}" not found.`,
-                data: null,
-                errors: err
-            });
-        }
-    });
 }

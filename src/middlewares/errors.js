@@ -21,14 +21,14 @@ export const errors = (err, req, res, next) => {
         return res.status(err.statusCode).json({
             success: false,
             message: err.message,
-            errors: err.error
+            errors: err
         });
     }
 
     // Handle programming or unknown errors
     return res.status(500).json({
         success: false,
-        status: 'error',
+        errors:"",
         message: 'Something went wrong',
     });
 };
