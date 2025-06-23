@@ -1,7 +1,7 @@
 import mongoose ,{ Schema } from "mongoose";
 import { Salarie } from "./salarie.js";
 
-const QuestionSchema = new Schema({
+const QuizItemSchema = new Schema({
     question: { type: String },
     answers: { type: [String] },
     userAnswers: { type: [String] },
@@ -22,7 +22,7 @@ const QuizSchema = new Schema({
         immutable: true
 
     },
-    questions: { type: [QuestionSchema] },
+    quizItems: { type: [QuizItemSchema] },
     doneAt: {
         type: Date,
         default: () => Date.now(),
