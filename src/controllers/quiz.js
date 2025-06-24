@@ -44,7 +44,7 @@ const calculScore = (quiz) => {
 
 export const addQuiz = (req, res, next) => {
     const { quizName, assignedTo, quiz } = req.body
-    const note = calculScore(questions)
+    const note = calculScore(quiz)
 
     const newQuiz = new Quiz({ note, quizName, assignedTo, quizItems: quiz })
     newQuiz.save()
