@@ -28,7 +28,7 @@ app.use('/api/templates',templateRouter)
 app.use(errors)
 
 const port = process.env.SERVER_PORT
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`server started on http://0.0.0.0:${port}`)
 })
 
