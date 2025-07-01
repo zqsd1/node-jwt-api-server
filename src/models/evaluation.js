@@ -9,7 +9,7 @@ const NiveauCompetence = new Schema({
 
 const CompetenceSchema = new Schema({
     competenceName: String,
-    eval: NiveauCompetence,
+    autoEval: NiveauCompetence,
     counterEval: [NiveauCompetence]
 })
 
