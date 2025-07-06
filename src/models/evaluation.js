@@ -21,10 +21,12 @@ const EvaluationSchema = new Schema({
 })
 
 EvaluationSchema.pre('save', async function (next) {
-    const salarie = await Salarie.findById(this.assignedTo)
-    salarie.evaluations.push(this._id)
-    await salarie.save()
-    next()
+    if (this.isNew) {
+        const salarie = await Salarie.findById(this.assignedTo)
+        salarie.evaluations.push(this._id)
+        await salarie.save()
+        next()
+    }
 })
 
 //quand on delete un quiz faut le delier du salarie
