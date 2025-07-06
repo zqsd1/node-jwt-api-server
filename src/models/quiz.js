@@ -4,8 +4,8 @@ import { Salarie } from "./salarie.js";
 const QuizItemSchema = new Schema({
     question: { type: String },
     answers: { type: [String] },
-    userAnswers: { type: [String] },
-    goodAnswers: { type: [String] }
+    userAnswer: { type: [String] },
+    goodAnswer: { type: [String] }
 })
 
 const QuizSchema = new Schema({
