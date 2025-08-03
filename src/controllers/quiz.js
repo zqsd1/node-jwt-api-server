@@ -86,3 +86,25 @@ export const deleteQuiz = (req, res, next) => {
     })
 
 }
+
+
+export const quizCounter = async (req, res, next) => {
+    Quiz.aggregate([{
+        $group: {
+            _id: "$assignedTo",
+            count: { $sum: 1 }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            assignedTo: "$_id",
+            count: 1
+        }
+    }]).then(result => {
+        res.json(result)
+    }).catch(err => {
+        next(err)
+    })
+
+}
