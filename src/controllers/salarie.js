@@ -1,6 +1,6 @@
 import { HttpError } from "../httpError.js"
 import { Salarie } from "../models/salarie.js"
-
+import { logger } from "../winston.js"
 
 export const listSalarie = (req, res, next) => {
     Salarie.find().then(data => {
@@ -70,7 +70,7 @@ export const updateSalarie = (req, res, next) => {
 export const deleteSalarie = (req, res, next) => {
     const id = req.params.id
     Salarie.deleteOne({ _id: id }).then(data => {
-        if (!data) throw new HttpError(404, "salarie not found")
+        if (data.deletedCount == 0) throw new HttpError(404, "salarie not found")
         logger.info(`salarie ${id} deleted`, { userId: req.userinfo?.sub })
         res.json({
             success: true,

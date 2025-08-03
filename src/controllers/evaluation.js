@@ -35,7 +35,7 @@ export const deleteEvaluation = (req, res, next) => {
     const { id } = req.params
     Evaluation.deleteOne({ _id: id })
         .then(data => {
-            if (!data) throw new HttpError(404, "eval not found")
+            if (data.deletedCount == 0) throw new HttpError(404, "eval not found")
             logger.info("eval deleted", { userId: req.userinfo?.sub, data })
             res.json({
                 success: true,

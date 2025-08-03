@@ -1,5 +1,6 @@
 import { HttpError } from "../httpError.js"
 import { Quiz } from "../models/quiz.js"
+import { logger } from "../winston.js"
 
 export const listQuiz = (req, res, next) => {
 
@@ -79,7 +80,7 @@ export const addQuiz = (req, res, next) => {
 export const deleteQuiz = (req, res, next) => {
     const id = req.params.id
     Quiz.deleteOne({ _id: id }).then(data => {
-        if (!data) throw new HttpError(404, "salarie not found")
+        if (data.deletedCount == 0) throw new HttpError(404, "quiz not found")
         logger.info(`quiz ${id} deleted`, { userId: req.userinfo?.sub })
         res.json({
             success: true,

@@ -1,4 +1,4 @@
-import mongoose ,{ Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { Salarie } from "./salarie.js";
 
 const QuizItemSchema = new Schema({
@@ -41,13 +41,14 @@ QuizSchema.pre('save', async function (next) {
 })
 
 //quand on delete un quiz faut le delier du salarie
-QuizSchema.pre('deleteOne', async function (next) {
-    console.log("quiz delete")
+QuizSchema.post('deleteOne', async function (doc) {
+    if (doc.deletedCount == 0) return
     const quiz = await Quiz.findById(this._conditions._id)
+    if (!quiz) return
     const salarie = await Salarie.findById(quiz.assignedTo)
+    if (!salarie) return
     salarie.quizs = salarie.quizs.filter(q => !q.equals(quiz._id))
     await salarie.save()
-    next()
 })
 
 
