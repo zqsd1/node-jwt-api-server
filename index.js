@@ -13,7 +13,7 @@ import "dotenv/config"
 import "./src/db/mongo.js"
 import { errors } from "./src/middlewares/errors.js";
 
-const app = express()
+export const app = express()
 app.use(cors({
     origin: true,
     credentials: true
@@ -39,5 +39,5 @@ const gracefullShutdown = () => {
     });
 }
 
-process.on('SIGTERM', gracefullShutdown)
-process.on("SIGINT", gracefullShutdown)
+// process.on('SIGTERM', gracefullShutdown)
+// process.on("SIGINT", gracefullShutdown)
