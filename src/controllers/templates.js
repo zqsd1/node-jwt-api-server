@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, '..', '..', 'templates');
 
-export const listTemplates = async (req, res) => {
+export const listTemplates = async (req, res, next) => {
     const { type } = req.query
     try {
         const files = await fs.readdir(DATA_DIR);
@@ -41,8 +41,7 @@ export const listTemplates = async (req, res) => {
 
     } catch (err) {
         logger.error(err)
-        res.status(500).json({ success: false, message: "Error reading templates", errors: err });
-
+        next(new HttpError(500, "Error reading templates"))
     }
 }
 
@@ -51,6 +50,7 @@ export const getTemplate = (req, res, next) => {
     const filePath = path.join(DATA_DIR, `${fileName}.json`);
     import(filePath, { with: { type: "json" } })
         .then(file => {
+            logger.info(`template ${fileName} asked`, { userId: req.userinfo?.sub })
             res.json({
                 success: true,
                 message: `quiz ${fileName}`,

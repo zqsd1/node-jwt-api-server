@@ -1,4 +1,6 @@
+import { HttpError } from "../httpError.js"
 import { Evaluation } from "../models/evaluation.js"
+import { logger } from "../winston.js"
 
 export const listEvaluation = (req, res, next) => {
     Evaluation.find()
@@ -18,6 +20,7 @@ export const getEvaluation = (req, res, next) => {
     Evaluation.findById(id)
         .populate('assignedTo')
         .then(data => {
+            if (!data) throw new HttpError(404, "eval not found")
             res.json({
                 success: true,
                 message: `evaluation ${id}`,
@@ -32,6 +35,8 @@ export const deleteEvaluation = (req, res, next) => {
     const { id } = req.params
     Evaluation.deleteOne({ _id: id })
         .then(data => {
+            if (!data) throw new HttpError(404, "eval not found")
+            logger.info("eval deleted", { userId: req.userinfo?.sub, data })
             res.json({
                 success: true,
                 message: `evaluation ${id} deleted`,
@@ -47,6 +52,7 @@ export const addEvaluation = (req, res, next) => {
     const evaluation = new Evaluation({ assignedTo, evaluationName, competences })
     evaluation.save()
         .then(data => {
+            logger.info("eval added", { userId: req.userinfo?.sub, data })
             res.json({
                 success: true,
                 message: "evaluation ajouté",
@@ -62,6 +68,7 @@ export const addCounterEvaluation = (req, res, next) => {
     const { competences } = req.body
     Evaluation.findById(id)
         .then(result => {
+            if (!result) throw new HttpError(404, "evaluation not found")
             result.competences.forEach(competence => {
                 const comp = competences.find(c => competence._id.equals(c._id))
                 if (comp) {
@@ -70,6 +77,7 @@ export const addCounterEvaluation = (req, res, next) => {
             })
             return result.save()
         }).then(data => {
+            logger.info(`counter eval added to ${id}`, { userId: req.userinfo?.sub, data })
             res.json({
                 success: true,
                 message: "counter evaluation ajouté",

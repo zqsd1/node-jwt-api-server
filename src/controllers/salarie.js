@@ -20,6 +20,7 @@ export const detailSalarie = (req, res, next) => {
         .populate('quizs')
         .populate('evaluations')
         .then(data => {
+            if (!data) throw new HttpError(404, "salarie not found")
             res.json({
                 success: true,
                 message: `salarie ${id}`,
@@ -35,6 +36,7 @@ export const addSalarie = (req, res, next) => {
     const newSalarie = new Salarie({ nom, prenom, genre })
     newSalarie.save()
         .then(data => {
+            logger.info(`salarie ${nom} ${prenom} added`, { userId: req.userinfo?.sub })
             res.json({
                 success: true,
                 message: `salarie ajouté`,
@@ -51,21 +53,25 @@ export const updateSalarie = (req, res, next) => {
     const { nom, prenom } = req.body
     Salarie.findById(id)
         .then(result => {
+            if (!result) throw new HttpError(404, "salarie not found")
             return result.updateOne({ nom, prenom })
         }).then(data => {
+            logger.info(`salarie ${id} updated`, { userId: req.userinfo?.sub })
             res.json({
                 success: true,
                 message: `salarie ${id} updated`,
                 data
             })
-        }).catch(err =>
+        }).catch(err => {
             next(err)
-        )
+        })
 }
 
 export const deleteSalarie = (req, res, next) => {
     const id = req.params.id
     Salarie.deleteOne({ _id: id }).then(data => {
+        if (!data) throw new HttpError(404, "salarie not found")
+        logger.info(`salarie ${id} deleted`, { userId: req.userinfo?.sub })
         res.json({
             success: true,
             message: `salarie ${id} deleted`,
@@ -80,7 +86,7 @@ export const deleteSalarie = (req, res, next) => {
 export const findByName = (req, res, next) => {
     const { nom, prenom } = req.body
     Salarie.findOne({ nom, prenom }).then(data => {
-        if (!data) return next(new HttpError(404, `salarie ${nom} ${prenom} doesnt exist`))//res.status(404).json("vous n'existez pas")
+        if (!data) throw new HttpError(404, `salarie ${nom} ${prenom} doesnt exist`)
         return res.json({
             success: true,
             message: `salarie name found`,

@@ -1,3 +1,4 @@
+import { HttpError } from "../httpError.js"
 import { Quiz } from "../models/quiz.js"
 
 export const listQuiz = (req, res, next) => {
@@ -16,6 +17,7 @@ export const listQuiz = (req, res, next) => {
 export const getQuiz = (req, res, next) => {
     const id = req.params.id
     Quiz.findById(id).then(data => {
+        if (!data) throw new HttpError(404, "quiz not found")
         res.json({
             success: true,
             message: `quiz ${id}`,
@@ -49,6 +51,7 @@ export const addQuiz = (req, res, next) => {
     const newQuiz = new Quiz({ note, quizName, assignedTo, quizItems: quiz })
     newQuiz.save()
         .then(data => {
+            logger.info("quiz added", { assignedTo, quizName })
             res.json({
                 success: true,
                 message: `ajout quiz`,
@@ -76,6 +79,8 @@ export const addQuiz = (req, res, next) => {
 export const deleteQuiz = (req, res, next) => {
     const id = req.params.id
     Quiz.deleteOne({ _id: id }).then(data => {
+        if (!data) throw new HttpError(404, "salarie not found")
+        logger.info(`quiz ${id} deleted`, { userId: req.userinfo?.sub })
         res.json({
             success: true,
             message: `quiz ${id} deleted`,
