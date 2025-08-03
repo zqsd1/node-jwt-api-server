@@ -87,3 +87,23 @@ export const addCounterEvaluation = (req, res, next) => {
             next(err)
         })
 }
+
+export const evalCounter = (req, res, next) => {
+    Evaluation.aggregate([{
+        $group: {
+            _id: "$assignedTo",
+            count: { $sum: 1 }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            assignedTo: "$_id",
+            count: 1
+        }
+    }]).then(result => {
+        res.json(result)
+    }).catch(err => {
+        next(err)
+    })
+}
