@@ -5,7 +5,8 @@ const QuizItemSchema = new Schema({
     question: { type: String },
     answers: { type: [String] },
     userAnswer: { type: [String] },
-    goodAnswer: { type: [String] }
+    goodAnswer: { type: [String] },
+    image: {type: String}
 })
 
 const QuizSchema = new Schema({
