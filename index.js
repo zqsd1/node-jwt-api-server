@@ -12,8 +12,10 @@ import "dotenv/config"
 // if (process.env.NODE_ENV != "production") await import('dotenv/config')
 import "./src/db/mongo.js"
 import { errors } from "./src/middlewares/errors.js";
+import helmet from "helmet";
 
 export const app = express()
+app.use(helmet())
 app.use(cors({
     origin: true,
     credentials: true
@@ -23,7 +25,7 @@ app.use(express.json())
 app.use('/api/quizs', quizRouter)
 app.use('/api/salaries', salarieRouter)
 app.use('/api/evaluations', evaluationRouter)
-app.use('/api/templates',templateRouter)
+app.use('/api/templates', templateRouter)
 
 app.use(errors)
 
